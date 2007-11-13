@@ -1,14 +1,14 @@
 Name:		msec
 Version:	0.50.3
-Release:	%mkrel 1
+Release:	%mkrel 2
 Summary:	Security Level management for the Mandriva Linux distribution
-License:	GPL
+License:	GPLv2+
 Group:		System/Base
 Url:		http://www.mandrivalinux.com/
 Source0:	%{name}-%{version}.tar.bz2
-Source1:    msec.logrotate
-Source2:    msec.sh
-Source3:    msec.csh
+Source1:	msec.logrotate
+Source2:	msec.sh
+Source3:	msec.csh
 Requires:	perl-base
 Requires:	diffutils
 Requires:	gawk
@@ -18,11 +18,14 @@ Requires:	setup >= 2.2.0-21mdk
 Requires:	chkconfig >= 1.2.24-3mdk
 Requires:	python-base >= 2.3.3-2mdk
 Requires:	mailx
-Requires(pre):	rpm-helper >= 0.4
-Requires(postun): rpm-helper >= 0.4
-Conflicts:	    passwd < 0.67
+Requires:	python
+
+Requires(pre):		rpm-helper >= 0.4
+Requires(postun):	rpm-helper >= 0.4
+
+Conflicts:	passwd < 0.67
 BuildRequires:	python
-BuildRoot:	    %{_tmppath}/%{name}-%{version}
+BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
 The Mandriva Linux Security package is designed to provide generic
