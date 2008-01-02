@@ -25,6 +25,7 @@ Requires(postun):	rpm-helper >= 0.4
 
 Conflicts:	passwd < 0.67
 BuildRequires:	python
+BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
 The Mandriva Linux Security package is designed to provide generic
