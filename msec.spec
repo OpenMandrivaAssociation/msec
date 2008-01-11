@@ -1,6 +1,6 @@
 Name:		msec
-Version:	0.50.3
-Release:	%mkrel 2
+Version:	0.50.4
+Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
@@ -19,6 +19,8 @@ Requires:	chkconfig >= 1.2.24-3mdk
 Requires:	python-base >= 2.3.3-2mdk
 Requires:	mailx
 Requires:	python
+# at least xargs is used
+Requires:	findutils
 
 Requires(pre):		rpm-helper >= 0.4
 Requires(postun):	rpm-helper >= 0.4
