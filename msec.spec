@@ -1,5 +1,5 @@
 Name:		msec
-Version:	0.50.6
+Version:	0.50.7
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
@@ -40,7 +40,7 @@ in order to test the security of your system and alert you if needed.
 %setup -q
 
 %build
-make CFLAGS="$RPM_OPT_FLAGS"
+make CFLAGS="$RPM_OPT_FLAGS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 
 %install
 rm -rf %{buildroot}
