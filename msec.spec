@@ -1,6 +1,6 @@
 Name:		msec
 Version:	0.50.9
-Release:	%mkrel 1
+Release:	%mkrel 2
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
