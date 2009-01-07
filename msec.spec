@@ -1,14 +1,11 @@
 Name:		msec
-Version:	0.50.11
+Version:	0.60.1
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
 Url:		http://www.mandrivalinux.com/
 Source0:	%{name}-%{version}.tar.bz2
-Source1:	msec.logrotate
-Source2:	msec.sh
-Source3:	msec.csh
 Requires:	perl-base
 Requires:	diffutils
 Requires:	gawk
@@ -30,11 +27,27 @@ BuildRequires:	python
 BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
-The Mandriva Linux Security package is designed to provide generic
-secure level to the Mandriva Linux users...  It will permit you to
-choose between level 0 to 5 for a less -> more secured distribution.
-This packages includes several programs that will be run periodically
-in order to test the security of your system and alert you if needed.
+The Mandriva Linux Security package is designed to provide security features to
+the Mandriva Linux users. It allows to select from a set of preconfigured
+security levels, and supports custom permission settings, user-specified
+levels, and several security utilities.  This packages includes main msec
+application and several programs that will be run periodically in order to test
+the security of your system and alert you if needed.
+
+%package gui
+Summary:	Graphical msec interface
+Group:		System/Configuration/Other
+Requires:	pygtk2.0
+Requires:	msec
+
+%description gui
+The Mandriva Linux Security package is designed to provide security
+features to the Mandriva Linux users. It allows to select from a set
+of preconfigured security levels, and also supports custom permission
+settings, user-specified levels, and several security utilities.
+This packages includes graphical interface to control and tune msec
+permissions.
+
 
 %prep
 %setup -q
@@ -45,40 +58,12 @@ make CFLAGS="$RPM_OPT_FLAGS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 %install
 rm -rf %{buildroot}
 
-install -d %{buildroot}/etc/security/msec
-install -d %{buildroot}/etc/sysconfig
-install -d %{buildroot}/usr/share/msec
-install -d %{buildroot}/var/lib/msec
-install -d %{buildroot}/usr/sbin %{buildroot}/usr/bin
-install -d %{buildroot}/var/log/security
-install -d %{buildroot}%{_mandir}/man{3,8}
-
-cp -p init-sh/cleanold.sh share/*.py share/*.pyo share/level.* cron-sh/*.sh %{buildroot}/usr/share/msec
-chmod 644 %{buildroot}/usr/share/msec/{security,diff}_check.sh
-install -m 755 share/msec %{buildroot}/usr/sbin
-install -m 644 conf/server.* %{buildroot}/etc/security/msec
-install -m 644 conf/perm.* %{buildroot}/usr/share/msec
-install -m 755 src/promisc_check/promisc_check src/msec_find/msec_find %{buildroot}/usr/bin
-
-install -m644 man/C/*8 %{buildroot}%{_mandir}/man8/
-install -m644 man/C/*3 %{buildroot}%{_mandir}/man3/
-
-
-for i in man/??* ; do
-    install -d %{buildroot}%{_mandir}/`basename $i`/man8
-    install -m 644 $i/*.8 %{buildroot}%{_mandir}/`basename $i`/man8/
-    install -d %{buildroot}%{_mandir}/`basename $i`/man3
-    install -m 644 $i/*.3 %{buildroot}%{_mandir}/`basename $i`/man3/ || :
-done;
-
-
-touch %{buildroot}/var/log/security.log %{buildroot}/%{_sysconfdir}/sysconfig/%{name}
+make install
 
 mkdir -p %{buildroot}/%{_sysconfdir}/{logrotate.d,profile.d}
-install -m 644 %{SOURCE1} %{buildroot}/etc/logrotate.d/msec
-install -m 755 %{SOURCE2} %{buildroot}/etc/profile.d
-install -m 755 %{SOURCE3} %{buildroot}/etc/profile.d
 touch %{buildroot}/var/log/security.log
+touch %{buildroot}/etc/security/msec/security.conf
+touch %{buildroot}/etc/security/msec/perms.conf
 
 %find_lang %name
 
@@ -114,14 +99,68 @@ if [ $1 != 1 ]; then
 	if grep -q "# Mandrake-Security : if you remove this comment" /etc/profile; then
 		[ -z "$SL" -a -r /etc/profile.d/msec.sh ] && SL=`sed -n 's/.*SECURE_LEVEL=//p' <  /etc/profile.d/msec.sh` || :
 		/usr/share/msec/cleanold.sh || :
- 		[ -n "$SL" ] && msec $SL < /dev/null || :
-	else
-		[ -n "$SL" ] && msec < /dev/null || :
 	fi
 
 	# remove the old way of doing the daily cron
 	rm -f /etc/cron.d/msec
+
+	# upgrading old config files
+	if [ -n "$SL" ]; then
+		# old msec installation, pre 2009.1
+		# grab old configuration
+		OLDCONFIG=`mktemp /etc/security/msec/upgrade.XXXXXX`
+		[ -s /var/lib/msec/security.conf ] && cat /var/lib/msec/security.conf >> $OLDCONFIG
+		[ -s /etc/security/msec/security.conf ] && cat /var/lib/msec/security.conf >> $OLDCONFIG
+		if [ "$SL" -lt 2 ]; then
+			# none level
+			cp -f /etc/security/msec/level.none /etc/security/msec/security.conf
+			# permissions
+			echo "Updating system permissions."
+			msecperms -f none -e >/dev/null 2>/dev/null
+		elif [ "$SL" -lt 4 ]; then
+			# default level
+			cp -f /etc/security/msec/level.default /etc/security/msec/security.conf
+			# permissions
+			echo "Updating system permissions."
+			msecperms -f default -e >/dev/null 2>/dev/null
+		else
+			# secure level
+			cp -f /etc/security/msec/level.default /etc/security/msec/security.conf
+			# permissions
+			echo "Updating system permissions."
+			msecperms -f secure -e >/dev/null 2>/dev/null
+		fi
+
+		if [ -f /etc/sysconfig/msec ]; then
+			cat /etc/sysconfig/msec | grep -v SECURE_LEVEL > /etc/security/shell
+		fi
+
+		# upgrading old configuration
+		if [ -s "$OLDCONFIG" ]; then
+			cat ${OLDCONFIG} | sed -e 's/RPM_CHECK/CHECK_RPM/g' -e 's/CHKROOTKIT_CHECK/CHECK_CHKROOTKIT/g' >> /etc/security/msec/security.conf
+		fi
+		rm -f $OLDCONFIG
+	fi
 fi
+
+# creating default configuration
+if [ ! -s /etc/security/msec/security.conf ]; then
+	# creating default level configuration
+	echo "Installing default security level."
+	cp /etc/security/msec/level.default /etc/security/msec/security.conf
+fi
+
+if [ ! -s /etc/security/msec/perms.conf ]; then
+	# creating default level configuration
+	echo "Installing default system permissions."
+	cp /etc/security/msec/perm.default /etc/security/msec/perms.conf
+	msecperms -f default -e >/dev/null 2>/dev/null
+fi
+
+# running msec
+msec
+# running msecperm
+msecperms >/dev/null 2>/dev/null
 
 %postun
 
@@ -139,12 +178,18 @@ rm -rf %{buildroot}
 
 %files -f %{name}.lang
 %defattr(-,root,root)
-%doc AUTHORS COPYING share/README share/CHANGES
+%doc AUTHORS COPYING src/msec/README src/msec/CHANGES
 %doc ChangeLog doc/*.txt
 %_bindir/promisc_check
 %_bindir/msec_find
 %_sbindir/msec
-%_datadir/msec
+%_sbindir/msecperms
+%_datadir/msec/msec.py*
+%_datadir/msec/config.py*
+%_datadir/msec/libmsec.py*
+%_datadir/msec/msecperms.py*
+%_datadir/msec/version.py*
+%_datadir/msec/*.sh
 %_mandir/*/*.*
 %lang(cs) %_mandir/cs/man?/*
 %lang(et) %_mandir/et/man?/*
@@ -156,17 +201,26 @@ rm -rf %{buildroot}
 %lang(pl) %_mandir/pl/man?/*
 %lang(ru) %_mandir/ru/man?/*
 %lang(uk) %_mandir/uk/man?/*
-
-
 %dir /var/log/security
 %dir /etc/security/msec
-%dir /var/lib/msec
-
-%config(noreplace) /etc/security/msec/*
+%config /etc/security/msec/level.*
+%config /etc/security/msec/perm.*
+%config /etc/security/msec/server.*
+%config(noreplace) /etc/security/msec/security.conf
+%config(noreplace) /etc/security/msec/perms.conf
 %config(noreplace) /etc/logrotate.d/msec
 /etc/profile.d/msec*
-%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 
 %ghost /var/log/security.log
+%ghost /var/log/msec.log
+
+
+
+%files gui
+%defattr(-,root,root)
+%_sbindir/msecgui
+%_datadir/msec/msecgui.py*
+%_datadir/msec/help.py*
+
 
 
