@@ -1,5 +1,5 @@
 Name:		msec
-Version:	0.60.4
+Version:	0.60.5
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
@@ -116,19 +116,19 @@ if [ $1 != 1 ]; then
 			cp -f /etc/security/msec/level.none /etc/security/msec/security.conf
 			# permissions
 			echo "Updating system permissions."
-			msecperms -f none -e >/dev/null 2>/dev/null
+			msecperms -f none >/dev/null 2>/dev/null
 		elif [ "$SL" -lt 4 ]; then
 			# default level
 			cp -f /etc/security/msec/level.default /etc/security/msec/security.conf
 			# permissions
 			echo "Updating system permissions."
-			msecperms -f default -e >/dev/null 2>/dev/null
+			msecperms -f default >/dev/null 2>/dev/null
 		else
 			# secure level
 			cp -f /etc/security/msec/level.default /etc/security/msec/security.conf
 			# permissions
 			echo "Updating system permissions."
-			msecperms -f secure -e >/dev/null 2>/dev/null
+			msecperms -f secure >/dev/null 2>/dev/null
 		fi
 
 		if [ -f /etc/sysconfig/msec ]; then
@@ -154,7 +154,7 @@ if [ ! -s /etc/security/msec/perms.conf ]; then
 	# creating default level configuration
 	echo "Installing default system permissions."
 	cp /etc/security/msec/perm.default /etc/security/msec/perms.conf
-	msecperms -f default -e >/dev/null 2>/dev/null
+	msecperms -f default >/dev/null 2>/dev/null
 fi
 
 # running msec
