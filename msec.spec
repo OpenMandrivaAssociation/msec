@@ -1,6 +1,6 @@
 Name:		msec
 Version:	0.60.5
-Release:	%mkrel 2
+Release:	%mkrel 3
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
@@ -61,6 +61,9 @@ make CFLAGS="$RPM_OPT_FLAGS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 rm -rf %{buildroot}
 
 make install
+
+#temporary workaround, don't limit service by default
+rm -f %{buildroot}/%{_sysconfdir}/security/msec/server.default
 
 mkdir -p %{buildroot}/%{_sysconfdir}/{logrotate.d,profile.d}
 touch %{buildroot}/var/log/security.log
