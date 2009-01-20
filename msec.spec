@@ -1,6 +1,6 @@
 Name:		msec
 Version:	0.60.6
-Release:	%mkrel 1
+Release:	%mkrel 2
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
@@ -125,7 +125,7 @@ if [ $1 != 1 ]; then
 		[ -s /etc/security/msec/security.conf ] && cat /var/lib/msec/security.conf >> $OLDCONFIG
 		if [ "$SL" -gt 3 ]; then
 			NEWLEVEL="secure"
-		elif [ "$SL" --gt 1 ]; then
+		elif [ "$SL" -gt 1 ]; then
 			NEWLEVEL="default"
 		else
 			NEWLEVEL="none"
