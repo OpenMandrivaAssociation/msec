@@ -1,6 +1,6 @@
 Name:		msec
-Version:	0.60.5
-Release:	%mkrel 3
+Version:	0.60.6
+Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
@@ -62,15 +62,22 @@ rm -rf %{buildroot}
 
 make install
 
-#temporary workaround, don't limit service by default
-rm -f %{buildroot}/%{_sysconfdir}/security/msec/server.default
-
 mkdir -p %{buildroot}/%{_sysconfdir}/{logrotate.d,profile.d}
 touch %{buildroot}/var/log/security.log
 touch %{buildroot}/etc/security/msec/security.conf
 touch %{buildroot}/etc/security/msec/perms.conf
 
 %find_lang %name
+
+cat > README.urpmi << EOF
+
+Msec packaged was redesigned for Mandriva Linux 2009.1.
+
+Please review your security configuration, by either using msecgui,
+or by examining /etc/security/msec/security.conf and
+/etc/security/msec/perms.conf files. Consult the man page for additional
+information.
+EOF
 
 %pre
 %_pre_groupadd xgrp
@@ -116,24 +123,18 @@ if [ $1 != 1 ]; then
 		OLDCONFIG=`mktemp /etc/security/msec/upgrade.XXXXXX`
 		[ -s /var/lib/msec/security.conf ] && cat /var/lib/msec/security.conf >> $OLDCONFIG
 		[ -s /etc/security/msec/security.conf ] && cat /var/lib/msec/security.conf >> $OLDCONFIG
-		if [ "$SL" -lt 2 ]; then
-			# none level
-			cp -f /etc/security/msec/level.none /etc/security/msec/security.conf
-			# permissions
-			echo "Updating system permissions."
-			msecperms -f none >/dev/null 2>/dev/null
-		elif [ "$SL" -lt 4 ]; then
-			# default level
-			cp -f /etc/security/msec/level.default /etc/security/msec/security.conf
-			# permissions
-			echo "Updating system permissions."
-			msecperms -f default >/dev/null 2>/dev/null
+		if [ "$SL" -gt 3 ]; then
+			NEWLEVEL="secure"
+		elif [ "$SL" --gt 1 ]; then
+			NEWLEVEL="default"
 		else
-			# secure level
-			cp -f /etc/security/msec/level.default /etc/security/msec/security.conf
-			# permissions
-			echo "Updating system permissions."
-			msecperms -f secure >/dev/null 2>/dev/null
+			NEWLEVEL="none"
+		fi
+		if [ ! -s /etc/security/msec/security.conf ]; then
+			cp -f /etc/security/msec/level.$NEWLEVEL /etc/security/msec/security.conf
+		fi
+		if [ ! -s /etc/security/msec/perms.conf ]; then
+			cp -f /etc/security/msec/perm.$NEWLEVEL /etc/security/msec/perms.conf
 		fi
 
 		if [ -f /etc/sysconfig/msec ]; then
@@ -151,21 +152,13 @@ fi
 # creating default configuration
 if [ ! -s /etc/security/msec/security.conf ]; then
 	# creating default level configuration
-	echo "Installing default security level."
-	cp /etc/security/msec/level.default /etc/security/msec/security.conf
+	cp -f /etc/security/msec/level.default /etc/security/msec/security.conf
 fi
 
 if [ ! -s /etc/security/msec/perms.conf ]; then
 	# creating default level configuration
-	echo "Installing default system permissions."
-	cp /etc/security/msec/perm.default /etc/security/msec/perms.conf
-	msecperms -f default >/dev/null 2>/dev/null
+	cp -f /etc/security/msec/perm.default /etc/security/msec/perms.conf
 fi
-
-# running msec
-msec
-# running msecperm
-msecperms >/dev/null 2>/dev/null
 
 %postun
 
