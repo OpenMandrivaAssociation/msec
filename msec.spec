@@ -1,5 +1,5 @@
 Name:		msec
-Version:	0.60.9
+Version:	0.60.10
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
@@ -23,6 +23,8 @@ Requires(post):	initscripts
 
 Requires(pre):		rpm-helper >= 0.4
 Requires(postun):	rpm-helper >= 0.4
+
+Suggests:	msec-gui
 
 Conflicts:	passwd < 0.67
 BuildRequires:	python
@@ -67,8 +69,6 @@ touch %{buildroot}/var/log/security.log
 touch %{buildroot}/etc/security/msec/security.conf
 touch %{buildroot}/etc/security/msec/perms.conf
 
-%find_lang %name
-
 cat > README.urpmi << EOF
 
 Msec packaged was redesigned for Mandriva Linux 2009.1.
@@ -78,6 +78,8 @@ or by examining /etc/security/msec/security.conf and
 /etc/security/msec/perms.conf files. Consult the man page for additional
 information.
 EOF
+
+%find_lang %name
 
 %pre
 %_pre_groupadd xgrp
@@ -126,7 +128,7 @@ if [ $1 != 1 ]; then
 		if [ "$SL" -gt 3 ]; then
 			NEWLEVEL="secure"
 		elif [ "$SL" -gt 1 ]; then
-			NEWLEVEL="default"
+			NEWLEVEL="standard"
 		else
 			NEWLEVEL="none"
 		fi
@@ -150,19 +152,24 @@ if [ $1 != 1 ]; then
 
 	# fixing spelling
 	if [ -f /etc/security/msec/security.conf ]; then
+		# without-password config setting
 		sed -i -e 's/without_password/without-password/g' /etc/security/msec/security.conf
+		# level name changes
+		sed -i -e 's/=default$/=standard/g' /etc/security/msec/security.conf
 	fi
 fi
 
-# creating default configuration
-if [ ! -s /etc/security/msec/security.conf ]; then
-	# creating default level configuration
-	cp -f /etc/security/msec/level.default /etc/security/msec/security.conf
-fi
+# creating default configuration if not installed by installer
+if [ "$DURING_INSTALL" != "1" ]; then
+	if [ ! -s /etc/security/msec/security.conf ]; then
+		# creating default level configuration
+		cp -f /etc/security/msec/level.standard /etc/security/msec/security.conf
+	fi
 
-if [ ! -s /etc/security/msec/perms.conf ]; then
-	# creating default level configuration
-	cp -f /etc/security/msec/perm.default /etc/security/msec/perms.conf
+	if [ ! -s /etc/security/msec/perms.conf ]; then
+		# creating default level configuration
+		cp -f /etc/security/msec/perm.standard /etc/security/msec/perms.conf
+	fi
 fi
 
 %postun
@@ -181,7 +188,7 @@ rm -rf %{buildroot}
 
 %files -f %{name}.lang
 %defattr(-,root,root)
-%doc AUTHORS COPYING src/msec/README src/msec/CHANGES
+%doc AUTHORS COPYING README*
 %doc ChangeLog doc/*.txt
 %_bindir/promisc_check
 %_bindir/msec_find
