@@ -1,5 +1,5 @@
 Name:		msec
-Version:	0.60.11
+Version:	0.60.12
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
@@ -68,6 +68,9 @@ mkdir -p %{buildroot}/%{_sysconfdir}/{logrotate.d,profile.d}
 touch %{buildroot}/var/log/security.log
 touch %{buildroot}/etc/security/msec/security.conf
 touch %{buildroot}/etc/security/msec/perms.conf
+# init script
+install -d %{buildroot}/%{_initrddir}
+install -m755 %{_builddir}/%{name}-%{version}/msec.init %{buildroot}/%{_initrddir}/%{name}
 
 cat > README.urpmi << EOF
 
@@ -86,7 +89,12 @@ EOF
 %_pre_groupadd ntools
 %_pre_groupadd ctools
 
+%preun
+%_preun_service msec
+
 %post
+%_post_service msec
+
 touch /var/log/security.log
 
 if [ $1 != 1 ]; then
@@ -192,6 +200,7 @@ rm -rf %{buildroot}
 %doc ChangeLog doc/*.txt
 %_bindir/promisc_check
 %_bindir/msec_find
+%{_initrddir}/%{name}
 %_sbindir/msec
 %_sbindir/msecperms
 %_datadir/msec/msec.py*
@@ -200,6 +209,7 @@ rm -rf %{buildroot}
 %_datadir/msec/msecperms.py*
 %_datadir/msec/version.py*
 %_datadir/msec/*.sh
+%_datadir/msec/plugins/*
 %_mandir/*/*.*
 %lang(cs) %_mandir/cs/man?/*
 %lang(et) %_mandir/et/man?/*
