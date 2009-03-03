@@ -1,5 +1,5 @@
 Name:		msec
-Version:	0.60.12
+Version:	0.60.13
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
@@ -153,7 +153,7 @@ if [ $1 != 1 ]; then
 
 		# upgrading old configuration
 		if [ -s "$OLDCONFIG" ]; then
-			cat ${OLDCONFIG} | sed -e 's/RPM_CHECK/CHECK_RPM/g' -e 's/CHKROOTKIT_CHECK/CHECK_CHKROOTKIT/g' >> /etc/security/msec/security.conf
+			cat ${OLDCONFIG} >> /etc/security/msec/security.conf
 		fi
 		rm -f $OLDCONFIG
 	fi
@@ -164,6 +164,8 @@ if [ $1 != 1 ]; then
 		sed -i -e 's/without_password/without-password/g' /etc/security/msec/security.conf
 		# level name changes
 		sed -i -e 's/=default$/=standard/g' /etc/security/msec/security.conf
+		# variable name changes
+		sed -i -e 's/RPM_CHECK=/CHECK_RPM=/g' -e 's/CHKROOTKIT_CHECK=/CHECK_CHKROOTKIT=/g' /etc/security/msec/security.conf
 	fi
 fi
 
@@ -241,6 +243,7 @@ rm -rf %{buildroot}
 %_sbindir/msecgui
 %_datadir/msec/msecgui.py*
 %_datadir/msec/help.py*
+%_datadir/msec/msec.png
 
 
 
