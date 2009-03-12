@@ -1,5 +1,5 @@
 Name:		msec
-Version:	0.60.14
+Version:	0.60.15
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
@@ -166,6 +166,10 @@ if [ $1 != 1 ]; then
 		sed -i -e 's/=default$/=standard/g' /etc/security/msec/security.conf
 		# variable name changes
 		sed -i -e 's/RPM_CHECK=/CHECK_RPM=/g' -e 's/CHKROOTKIT_CHECK=/CHECK_CHKROOTKIT=/g' /etc/security/msec/security.conf
+		# serverlink changes
+		sed -i -e 's/\(CREATE_SERVER_LINK\)=standard/\1=no/g' \
+			-e 's/\(CREATE_SERVER_LINK\)=secure/\1=remote/g' \
+			/etc/security/msec/security.conf
 	fi
 fi
 
