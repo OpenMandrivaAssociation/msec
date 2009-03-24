@@ -1,5 +1,5 @@
 Name:		msec
-Version:	0.60.15
+Version:	0.60.16
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
@@ -25,6 +25,8 @@ Requires(pre):		rpm-helper >= 0.4
 Requires(postun):	rpm-helper >= 0.4
 
 Suggests:	msec-gui
+# using s2u for desktop notifications
+Suggests:	s2u >= 0.9
 
 Conflicts:	passwd < 0.67
 BuildRequires:	python
