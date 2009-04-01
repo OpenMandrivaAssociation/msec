@@ -136,7 +136,7 @@ if [ $1 != 1 ]; then
 		# grab old configuration
 		OLDCONFIG=`mktemp /etc/security/msec/upgrade.XXXXXX`
 		[ -s /var/lib/msec/security.conf ] && cat /var/lib/msec/security.conf >> $OLDCONFIG
-		[ -s /etc/security/msec/security.conf ] && cat /var/lib/msec/security.conf >> $OLDCONFIG
+		[ -s /etc/security/msec/security.conf ] && cat /etc/security/msec/security.conf >> $OLDCONFIG
 		if [ "$SL" -gt 3 ]; then
 			NEWLEVEL="secure"
 		elif [ "$SL" -gt 1 ]; then
