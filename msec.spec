@@ -1,6 +1,6 @@
 Name:		msec
 Version:	0.60.17
-Release:	%mkrel 1
+Release:	%mkrel 2
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
@@ -73,6 +73,8 @@ touch %{buildroot}/etc/security/msec/perms.conf
 # init script
 install -d %{buildroot}/%{_initrddir}
 install -m755 %{_builddir}/%{name}-%{version}/msec.init %{buildroot}/%{_initrddir}/%{name}
+mkdir -p %{buildroot}/etc/X11/xinit.d
+touch %{buildroot}/etc/X11/xinit.d/msec
 
 cat > README.urpmi << EOF
 
@@ -238,6 +240,8 @@ rm -rf %{buildroot}
 %config(noreplace) /etc/security/msec/perms.conf
 %config(noreplace) /etc/logrotate.d/msec
 /etc/profile.d/msec*
+
+%config %attr(0755,root,root) /etc/X11/xinit.d/msec
 
 %ghost /var/log/security.log
 %ghost /var/log/msec.log
