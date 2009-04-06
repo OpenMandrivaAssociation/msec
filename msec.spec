@@ -157,7 +157,7 @@ if [ $1 != 1 ]; then
 
 		# upgrading old configuration
 		if [ -s "$OLDCONFIG" ]; then
-			cat ${OLDCONFIG} >> /etc/security/msec/security.conf
+			cat ${OLDCONFIG} | sort | uniq >> /etc/security/msec/security.conf
 		fi
 		rm -f $OLDCONFIG
 	fi
