@@ -1,5 +1,5 @@
 Name:		msec
-Version:	0.60.20
+Version:	0.60.21
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
@@ -170,10 +170,16 @@ if [ $1 != 1 ]; then
 		sed -i -e 's/=default$/=standard/g' /etc/security/msec/security.conf
 		# variable name changes
 		sed -i -e 's/RPM_CHECK=/CHECK_RPM=/g' -e 's/CHKROOTKIT_CHECK=/CHECK_CHKROOTKIT=/g' /etc/security/msec/security.conf
+		# fixing WIN_PARTS_UMASK upgrade parameters
+		sed -i -e 's/\(WIN_PARTS_UMASK\)=no/\1=0/g' /etc/security/msec/security.conf
 		# serverlink changes
 		sed -i -e 's/\(CREATE_SERVER_LINK\)=standard/\1=no/g' \
 			-e 's/\(CREATE_SERVER_LINK\)=secure/\1=remote/g' \
 			/etc/security/msec/security.conf
+		# removing duplicated entries
+		TEMPFILE=`mktemp /etc/security/msec/upgrade.XXXXXX`
+		cat /etc/security/msec/security.conf | sort | uniq > $TEMPFILE 2>/dev/null && mv -f $TEMPFILE /etc/security/msec/security.conf
+		test -f $TEMPFILE && rm -f $TEMPFILE
 	fi
 fi
 
