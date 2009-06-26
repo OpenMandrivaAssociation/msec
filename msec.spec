@@ -1,5 +1,5 @@
 Name:		msec
-Version:	0.60.22
+Version:	0.70.1
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
@@ -75,16 +75,6 @@ install -d %{buildroot}/%{_initrddir}
 install -m755 %{_builddir}/%{name}-%{version}/msec.init %{buildroot}/%{_initrddir}/%{name}
 mkdir -p %{buildroot}/etc/X11/xinit.d
 touch %{buildroot}/etc/X11/xinit.d/msec
-
-cat > README.urpmi << EOF
-
-Msec packaged was redesigned for Mandriva Linux 2009.1.
-
-Please review your security configuration, by either using msecgui,
-or by examining /etc/security/msec/security.conf and
-/etc/security/msec/perms.conf files. Consult the man page for additional
-information.
-EOF
 
 %find_lang %name
 
@@ -176,6 +166,8 @@ if [ $1 != 1 ]; then
 		sed -i -e 's/\(CREATE_SERVER_LINK\)=standard/\1=no/g' \
 			-e 's/\(CREATE_SERVER_LINK\)=secure/\1=remote/g' \
 			/etc/security/msec/security.conf
+		# CHECK_RPM split into CHECK_RPM_PACKAGES and CHECK_RPM_INTEGRITY
+		sed -i -e 's/CHECK_RPM=\(.*\)/CHECK_RPM_PACKAGES=\1\nCHECK_RPM_INTEGRITY=\1/g' /etc/security/msec/security.conf
 		# removing duplicated entries
 		TEMPFILE=`mktemp /etc/security/msec/upgrade.XXXXXX`
 		cat /etc/security/msec/security.conf | sort | uniq > $TEMPFILE 2>/dev/null && mv -f $TEMPFILE /etc/security/msec/security.conf
@@ -226,6 +218,7 @@ rm -rf %{buildroot}
 %_datadir/msec/version.py*
 %_datadir/msec/*.sh
 %_datadir/msec/plugins/*
+%_datadir/msec/scripts/*
 %_mandir/*/*.*
 %lang(cs) %_mandir/cs/man?/*
 %lang(et) %_mandir/et/man?/*
@@ -251,8 +244,6 @@ rm -rf %{buildroot}
 
 %ghost /var/log/security.log
 %ghost /var/log/msec.log
-
-
 
 %files gui
 %defattr(-,root,root)
