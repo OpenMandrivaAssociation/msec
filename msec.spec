@@ -1,5 +1,5 @@
 Name:		msec
-Version:	0.70.3
+Version:	0.70.4
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
@@ -238,7 +238,7 @@ rm -rf %{buildroot}
 %config(noreplace) /etc/security/msec/security.conf
 %config(noreplace) /etc/security/msec/perms.conf
 %config(noreplace) /etc/logrotate.d/msec
-/etc/profile.d/msec*
+/etc/profile.d/*msec*
 
 %config %attr(0755,root,root) /etc/X11/xinit.d/msec
 
