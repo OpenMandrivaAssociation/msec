@@ -26,7 +26,8 @@ Requires(postun):	rpm-helper >= 0.4
 
 Suggests:	msec-gui
 # using s2u for desktop notifications
-Suggests:	s2u >= 0.9
+# it should be pulled by xinit to reduce basesystem size
+# Suggests:	s2u >= 0.9
 
 Conflicts:	passwd < 0.67
 BuildRequires:	python
