@@ -1,5 +1,5 @@
 Name:		msec
-Version:	0.80.4
+Version:	0.80.5
 Release:	%mkrel 1
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
@@ -137,6 +137,7 @@ rm -rf %{buildroot}
 %_datadir/msec/config.py*
 %_datadir/msec/libmsec.py*
 %_datadir/msec/msecperms.py*
+%_datadir/msec/tools.py*
 %_datadir/msec/version.py*
 %_datadir/msec/*.sh
 %_datadir/msec/plugins/*
