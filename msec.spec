@@ -1,11 +1,12 @@
 Name:		msec
 Version:	0.80.10
-Release:	%mkrel 2
+Release:	3
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
 Url:		http://www.mandrivalinux.com/
 Source0:	%{name}-%{version}.tar.bz2
+Patch0:		msec-0.80.10-dont-pass-noscripts-to-rpm_-Va.patch
 Requires:	perl-base
 Requires:	diffutils
 Requires:	gawk
@@ -58,6 +59,7 @@ permissions.
 
 %prep
 %setup -q
+%patch0 -p1 -b .noscripts~
 
 %build
 make CFLAGS="$RPM_OPT_FLAGS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
