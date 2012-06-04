@@ -1,6 +1,6 @@
 Name:		msec
 Version:	0.80.10
-Release:	5
+Release:	6
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
@@ -9,6 +9,7 @@ Source0:	%{name}-%{version}.tar.bz2
 Patch0:		msec-0.80.10-dont-pass-noscripts-to-rpm_-Va.patch
 Patch1:		msec-0.80.10-remove.svn.patch
 Patch2:         msec-0.80.10-start-networkmanager.patch
+Patch3:		msec-0.80.10-use-default-rpm-query-format.patch
 Requires:	perl-base
 Requires:	diffutils
 Requires:	gawk
