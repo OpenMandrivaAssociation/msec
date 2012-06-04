@@ -10,6 +10,7 @@ Patch0:		msec-0.80.10-dont-pass-noscripts-to-rpm_-Va.patch
 Patch1:		msec-0.80.10-remove.svn.patch
 Patch2:		msec-0.80.10-start-networkmanager.patch
 Patch3:		msec-0.80.10-use-default-rpm-query-format.patch
+Patch4:		msec-0.80.10-fix-rpm-permissions.patch
 Requires:	perl-base
 Requires:	diffutils
 Requires:	gawk
