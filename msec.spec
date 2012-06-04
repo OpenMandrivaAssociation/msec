@@ -121,7 +121,7 @@ fi
 %_postun_groupdel ctools
 
 %files -f %{name}.lang
-%doc AUTHORS COPYING README*
+%doc AUTHORS README*
 %doc ChangeLog doc/*.txt
 %{_bindir}/promisc_check
 %{_bindir}/msec_find
