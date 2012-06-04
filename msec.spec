@@ -67,6 +67,7 @@ permissions.
 
 %install
 make install
+find %{buildroot} -name \*~ | xargs rm -f
 
 touch %{buildroot}%{_var}/log/security.log
 touch %{buildroot}%{_sysconfdir}/security/msec/security.conf
