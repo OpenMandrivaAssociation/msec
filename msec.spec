@@ -95,7 +95,7 @@ touch %{_var}/log/security.log
 
 if [ $1 != 1 ]; then
 	# since 0.80.3, msec has its own upgrade script, which handles upgrades from previous versions
-	%{_datadir}/gmsec/upgrade.sh
+	%{_datadir}/msec/upgrade.sh
 fi
 
 # creating default configuration if not installed by installer
