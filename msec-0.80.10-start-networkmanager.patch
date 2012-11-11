@@ -1,0 +1,12 @@
+diff --git a/conf/server.local b/conf/server.local
+index 565e156..ea6725c 100644
+--- a/conf/server.local
++++ b/conf/server.local
+@@ -12,6 +12,7 @@ irqbalance
+ keytable
+ msec
+ network
++networkmanager
+ pcmcia
+ prelude
+ resolvconf

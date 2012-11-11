@@ -1,0 +1,11 @@
+--- msec-0.80.10/conf/perm.secure.fix	2010-06-28 18:23:24.000000000 +0400
++++ msec-0.80.10/conf/perm.secure	2011-08-09 15:28:58.860119486 +0400
+@@ -81,7 +81,7 @@
+ /usr/tmp					root.adm		1773
+ /var/						root.root		755
+ /var/lib/rpm/Packages				rpm.rpm			640
+-/var/lib/svn					svn.svn			770
++#/var/lib/svn					svn.svn			770
+ /var/lock/subsys				root.adm		750
+ /var/log/					root.adm		751
+ /var/log/*					root.root		640
