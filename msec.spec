@@ -1,6 +1,6 @@
 Name:		msec
 Version:	0.80.10
-Release:	4.2
+Release:	7
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
@@ -8,7 +8,7 @@ Url:		http://www.mandrivalinux.com/
 Source0:	%{name}-%{version}.tar.bz2
 Patch0:		msec-0.80.10-dont-pass-noscripts-to-rpm_-Va.patch
 Patch1:		msec-0.80.10-remove.svn.patch
-Patch2:         msec-0.80.10-start-networkmanager.patch
+Patch2:		msec-0.80.10-start-networkmanager.patch
 Requires:	perl-base
 Requires:	diffutils
 Requires:	gawk
@@ -24,7 +24,7 @@ Requires:	findutils
 # ensure sysctl.conf and inittab are present before installing msec
 Requires(post):	initscripts
 
-Requires(pre):		rpm-helper >= 0.4
+Requires(pre):	rpm-helper >= 0.4
 Requires(postun):	rpm-helper >= 0.4
 
 Suggests:	msec-gui
@@ -34,7 +34,6 @@ Suggests:	msec-gui
 
 Conflicts:	passwd < 0.67
 BuildRequires:	python
-BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
 The Mandriva Linux Security package is designed to provide security features to
@@ -67,7 +66,6 @@ permissions.
 make CFLAGS="$RPM_OPT_FLAGS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 
 %install
-rm -rf %{buildroot}
 
 make install
 
@@ -129,7 +127,6 @@ fi
 rm -rf %{buildroot}
 
 %files -f %{name}.lang
-%defattr(-,root,root)
 %doc AUTHORS COPYING README*
 %doc ChangeLog doc/*.txt
 %_bindir/promisc_check
@@ -173,7 +170,6 @@ rm -rf %{buildroot}
 %ghost /var/log/msec.log
 
 %files gui
-%defattr(-,root,root)
 %_sbindir/msecgui
 %_datadir/msec/msecgui.py*
 %_datadir/msec/help.py*
