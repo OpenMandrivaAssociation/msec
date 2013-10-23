@@ -1,6 +1,6 @@
 Name:		msec
 Version:	0.80.10
-Release:	9
+Release:	10
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
