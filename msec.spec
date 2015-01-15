@@ -18,7 +18,7 @@ Requires:	setup >= 2.2.0-21mdk
 Requires:	chkconfig >= 1.2.24-3mdk
 Requires:	python-base >= 2.3.3-2mdk
 Requires:	mailx
-Requires:	python
+Requires:	python2
 # at least xargs is used
 Requires:	findutils
 # ensure sysctl.conf and inittab are present before installing msec
@@ -61,6 +61,8 @@ permissions.
 %prep
 %setup -q
 %apply_patches
+find . -name "*.py" -exec sed -i "s#/usr/bin/python#%{__python2}#" {} \;
+find . -name "*.py" -exec sed -i "s#/usr/bin/env python#/usr/bin/env python2#" {} \;
 
 %build
 make CFLAGS="$RPM_OPT_FLAGS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
