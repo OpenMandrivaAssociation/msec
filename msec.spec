@@ -1,3 +1,4 @@
+%define debug_package %{nil}
 Name:		msec
 Version:	0.80.10
 Release:	20
