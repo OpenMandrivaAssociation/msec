@@ -1,0 +1,10 @@
+--- msec-0.80.10/src/msec/plugins/network.py.orig	2017-02-22 11:17:05.769926740 +0000
++++ msec-0.80.10/src/msec/plugins/network.py	2017-02-22 11:18:16.340115030 +0000
+@@ -109,7 +109,6 @@
+         config.SETTINGS['ACCEPT_BROADCASTED_ICMP_ECHO'] = ("network.accept_broadcasted_icmp_echo", ['yes', 'no'])
+         config.SETTINGS['ACCEPT_ICMP_ECHO'] = ("network.accept_icmp_echo", ['yes', 'no'])
+         config.SETTINGS['ALLOW_REMOTE_ROOT_LOGIN'] = ("network.allow_remote_root_login", ['yes', 'no', 'without-password'])
+-        config.SETTINGS['ENABLE_DNS_SPOOFING_PROTECTION'] = ("network.enable_dns_spoofing_protection", ['yes', 'no'])
+         config.SETTINGS['ENABLE_IP_SPOOFING_PROTECTION'] = ("network.enable_ip_spoofing_protection", ['yes', 'no'])
+         config.SETTINGS['ENABLE_LOG_STRANGE_PACKETS'] = ("network.enable_log_strange_packets", ['yes', 'no'])
+ 
