@@ -62,7 +62,7 @@ permissions.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 find . -name "*.py" -exec sed -i "s#/usr/bin/python#%{__python2}#" {} \;
 find . -name "*.py" -exec sed -i "s#/usr/bin/env python#/usr/bin/env python2#" {} \;
 
