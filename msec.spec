@@ -5,7 +5,7 @@ Release:	22
 Summary:	Security Level management for the Mandriva Linux distribution
 License:	GPLv2+
 Group:		System/Base
-Url:		http://www.mandrivalinux.com/
+Url:		https://www.mandrivalinux.com/
 Source0:	%{name}-%{version}.tar.bz2
 Patch0:		msec-0.80.10-dont-pass-noscripts-to-rpm_-Va.patch
 Patch1:		msec-0.80.10-remove.svn.patch
