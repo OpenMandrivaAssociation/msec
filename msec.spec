@@ -35,6 +35,7 @@ Suggests:	msec-gui
 # Suggests:	s2u >= 0.9
 
 Conflicts:	passwd < 0.67
+BuildRequires:	make
 BuildRequires:	python
 
 %description
